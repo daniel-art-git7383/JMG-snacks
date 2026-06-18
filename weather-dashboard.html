@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Weather Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Poppins', Arial;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  min-height: 100vh;
+  padding: 20px;
+  color: #333;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+header {
+  text-align: center;
+  color: white;
+  margin-bottom: 30px;
+}
+
+header h1 {
+  font-size: 48px;
+  margin-bottom: 10px;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+header p {
+  font-size: 18px;
+  opacity: 0.9;
+}
+
+/* SÖK */
+.search-section {
+  background: white;
+  border-radius: 15px;
+  padding: 25px;
+  margin-bottom: 30px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.search-section input {
+  flex: 1;
+  min-width: 250px;
+  padding: 15px;
+  border: 2px solid #e0e0e0;
+  border-radius: 10px;
+  font-family: Poppins;
+  font-size: 16px;
+  transition: 0.3s;
+}
+
+.search-section input:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 10px rgba(102, 126, 234, 0.3);
+}
+
+.search-section button {
+  padding: 15px 30px;
+  background: #667eea;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-family: Poppins;
+  font-weight: 600;
+  font-size: 16px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.search-section button:hover {
+  background: #5568d3;
+  transform: scale(1.05);
+}
+
+.location-btn {
+  padding: 15px 25px;
+  background: #764ba2;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-family: Poppins;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.location-btn:hover {
+  background: #6a3f8f;
+}
+
+/* AKTUELLT VÄDER */
+.current-weather {
+  background: white;
+  border-radius: 20px;
+  padding: 40px;
+  margin-bottom: 30px;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 30px;
+  align-items: center;
+}
+
+.weather-icon {
+  font-size: 120px;
+  text-align: center;
+}
+
+.weather-info h2 {
+  font-size: 32px;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+.city-name {
+  font-size: 24px;
+  color: #667eea;
+  margin-bottom: 20px;
+}
+
+.temperature {
+  font-size: 64px;
+  font-weight: 700;
+  color: #333;
+  margin: 20px 0;
+}
+
+.weather-description {
+  font-size: 18px;
+  color: #666;
+  text-transform: capitalize;
+  margin-bottom: 20px;
+}
+
+.weather-details {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.detail {
+  background: #f5f5f5;
+  padding: 15px;
+  border-radius: 10px;
+  border-left: 4px solid #667eea;
+}
+
+.detail-label {
+  font-size: 14px;
+  color: #999;
+  margin-bottom: 5px;
+}
+
+.detail-value {
+  font-size: 20px;
+  font-weight: 600;
+  color: #333;
+}
+
+/* 5-DAGARS PROGNOS */
+.forecast-section {
+  margin-bottom: 30px;
+}
+
+.forecast-section h3 {
+  color: white;
+  font-size: 24px;
+  margin-bottom: 20px;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.forecast-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+}
+
+.forecast-card {
+  background: white;
+  border-radius: 15px;
+  padding: 25px;
+  text-align: center;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  transition: 0.3s;
+}
+
+.forecast-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+}
+
+.forecast-day {
+  font-size: 16px;
+  font-weight: 600;
+  color: #667eea;
+  margin-bottom: 15px;
+}
+
+.forecast-icon {
+  font-size: 60px;
+  margin: 15px 0;
+}
+
+.forecast-temp {
+  font-size: 24px;
+  font-weight: 700;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.forecast-description {
+  font-size: 14px;
+  color: #666;
+  text-transform: capitalize;
+}
+
+/* ERROR & LOADING */
+.error {
+  background: #ff6b6b;
+  color: white;
+  padding: 20px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  text-align: center;
+  font-weight: 600;
+  animation: slideIn 0.3s ease;
+}
+
+.loading {
+  text-align: center;
+  color: white;
+  font-size: 18px;
+  padding: 40px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.hidden {
+  display: none;
+}
+
+/* RESPONSIV */
+@media (max-width: 768px) {
+  header h1 {
+    font-size: 32px;
+  }
+
+  .current-weather {
+    grid-template-columns: 1fr;
+    padding: 25px;
+  }
+
+  .weather-icon {
+    font-size: 80px;
+  }
+
+  .temperature {
+    font-size: 48px;
+  }
+
+  .search-section {
+    flex-direction: column;
+  }
+
+  .search-section input,
+  .search-section button {
+    width: 100%;
+  }
+
+  .forecast-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .forecast-grid {
+    grid-template-columns: 1fr;
+  }
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+  <!-- HEADER -->
+  <header>
+    <h1>🌤️ Weather Dashboard</h1>
+    <p>Få aktuell väderinformation från hela världen</p>
+  </header>
+
+  <!-- SÖK -->
+  <div class="search-section">
+    <input type="text" id="cityInput" placeholder="Sök efter en stad..." />
+    <button onclick="searchWeather()">🔍 Sök</button>
+    <button class="location-btn" onclick="getLocationWeather()">📍 Min plats</button>
+  </div>
+
+  <!-- ERROR MESSAGE -->
+  <div id="errorMessage" class="error hidden"></div>
+
+  <!-- LOADING -->
+  <div id="loadingMessage" class="loading hidden">⏳ Laddar väder...</div>
+
+  <!-- AKTUELLT VÄDER -->
+  <div id="currentWeatherSection" class="hidden">
+    <div class="current-weather">
+      <div class="weather-icon" id="weatherIcon">🌤️</div>
+      <div class="weather-info">
+        <div class="city-name" id="cityName">Stockholm</div>
+        <div class="temperature" id="temperature">--°C</div>
+        <div class="weather-description" id="weatherDescription">--</div>
+        
+        <div class="weather-details">
+          <div class="detail">
+            <div class="detail-label">💨 Vind</div>
+            <div class="detail-value" id="windSpeed">-- m/s</div>
+          </div>
+          <div class="detail">
+            <div class="detail-label">💧 Luftfuktighet</div>
+            <div class="detail-value" id="humidity">--%</div>
+          </div>
+          <div class="detail">
+            <div class="detail-label">🔽 Tryck</div>
+            <div class="detail-value" id="pressure">-- hPa</div>
+          </div>
+          <div class="detail">
+            <div class="detail-label">👁️ Sikt</div>
+            <div class="detail-value" id="visibility">-- km</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5-DAGARS PROGNOS -->
+  <div id="forecastSection" class="forecast-section hidden">
+    <h3>📅 5-Dagars Prognos</h3>
+    <div class="forecast-grid" id="forecastGrid"></div>
+  </div>
+</div>
+
+<script>
+const API_KEY = 'a6d8fb5f39c15a3a83a86b45f2b2e929'; // Gratis API-nyckel från OpenWeatherMap
+const API_BASE = 'https://api.openweathermap.org/data/2.5';
+
+// VÄDER-IKONER
+const weatherIcons = {
+  '01d': '☀️',
+  '01n': '🌙',
+  '02d': '⛅',
+  '02n': '🌥️',
+  '03d': '☁️',
+  '03n': '☁️',
+  '04d': '☁️',
+  '04n': '☁️',
+  '09d': '🌧️',
+  '09n': '🌧️',
+  '10d': '🌦️',
+  '10n': '🌧️',
+  '11d': '⛈️',
+  '11n': '⛈️',
+  '13d': '❄️',
+  '13n': '❄️',
+  '50d': '🌫️',
+  '50n': '🌫️'
+};
+
+// VISA ERROR
+function showError(message) {
+  const errorDiv = document.getElementById('errorMessage');
+  errorDiv.textContent = message;
+  errorDiv.classList.remove('hidden');
+  document.getElementById('currentWeatherSection').classList.add('hidden');
+  document.getElementById('forecastSection').classList.add('hidden');
+}
+
+// DÖLJ ERROR
+function hideError() {
+  document.getElementById('errorMessage').classList.add('hidden');
+}
+
+// VISA LOADING
+function showLoading() {
+  document.getElementById('loadingMessage').classList.remove('hidden');
+}
+
+// DÖLJ LOADING
+function hideLoading() {
+  document.getElementById('loadingMessage').classList.add('hidden');
+}
+
+// SÖK VÄDER
+function searchWeather() {
+  const city = document.getElementById('cityInput').value.trim();
+  if (!city) {
+    showError('Skriv en stad!');
+    return;
+  }
+  getWeatherByCity(city);
+}
+
+// HÄM VÄDER FRÅN STAD
+function getWeatherByCity(city) {
+  showLoading();
+  hideError();
+
+  fetch(`${API_BASE}/weather?q=${city}&appid=${API_KEY}&units=metric&lang=sv`)
+    .then(response => {
+      if (!response.ok) throw new Error('Stad hittades inte');
+      return response.json();
+    })
+    .then(data => {
+      displayCurrentWeather(data);
+      getForecast(data.coord.lat, data.coord.lon);
+    })
+    .catch(error => {
+      showError('❌ ' + error.message);
+      hideLoading();
+    });
+}
+
+// HÄM VÄDER FRÅN PLATS
+function getLocationWeather() {
+  if (!navigator.geolocation) {
+    showError('Geolocation är inte tillgängligt i din webbläsare');
+    return;
+  }
+
+  showLoading();
+  hideError();
+
+  navigator.geolocation.getCurrentPosition(
+    position => {
+      const { latitude, longitude } = position.coords;
+      fetch(`${API_BASE}/weather?lat=${latitude}&lon=${longitude}&appid=${API_KEY}&units=metric&lang=sv`)
+        .then(response => response.json())
+        .then(data => {
+          displayCurrentWeather(data);
+          getForecast(latitude, longitude);
+        })
+        .catch(error => {
+          showError('❌ Kunde inte hämta väder för din plats');
+          hideLoading();
+        });
+    },
+    error => {
+      showError('❌ Kunde inte få din plats. Tillåt platsåtkomst.');
+      hideLoading();
+    }
+  );
+}
+
+// VISA AKTUELLT VÄDER
+function displayCurrentWeather(data) {
+  hideLoading();
+
+  document.getElementById('cityName').textContent = `${data.name}, ${data.sys.country}`;
+  document.getElementById('temperature').textContent = Math.round(data.main.temp) + '°C';
+  document.getElementById('weatherDescription').textContent = data.weather[0].description;
+  document.getElementById('windSpeed').textContent = data.wind.speed + ' m/s';
+  document.getElementById('humidity').textContent = data.main.humidity + '%';
+  document.getElementById('pressure').textContent = data.main.pressure + ' hPa';
+  document.getElementById('visibility').textContent = (data.visibility / 1000).toFixed(1) + ' km';
+
+  const iconCode = data.weather[0].icon;
+  document.getElementById('weatherIcon').textContent = weatherIcons[iconCode] || '🌤️';
+
+  document.getElementById('currentWeatherSection').classList.remove('hidden');
+}
+
+// HÄM 5-DAGARS PROGNOS
+function getForecast(lat, lon) {
+  fetch(`${API_BASE}/forecast?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=metric&lang=sv`)
+    .then(response => response.json())
+    .then(data => {
+      displayForecast(data.list);
+    })
+    .catch(error => {
+      console.log('Prognos kunde inte hämtas');
+    });
+}
+
+// VISA PROGNOS
+function displayForecast(forecastList) {
+  const forecastGrid = document.getElementById('forecastGrid');
+  forecastGrid.innerHTML = '';
+
+  // Hämta en prognos per dag (var 24:e timme)
+  const dailyForecasts = [];
+  for (let i = 0; i < forecastList.length; i += 8) { // 8 * 3 timmar = 24 timmar
+    dailyForecasts.push(forecastList[i]);
+  }
+
+  dailyForecasts.forEach(forecast => {
+    const date = new Date(forecast.dt * 1000);
+    const dayName = date.toLocaleDateString('sv-SE', { weekday: 'short' });
+    const temp = Math.round(forecast.main.temp);
+    const icon = weatherIcons[forecast.weather[0].icon] || '🌤️';
+    const description = forecast.weather[0].description;
+
+    const card = document.createElement('div');
+    card.className = 'forecast-card';
+    card.innerHTML = `
+      <div class="forecast-day">${dayName}</div>
+      <div class="forecast-icon">${icon}</div>
+      <div class="forecast-temp">${temp}°C</div>
+      <div class="forecast-description">${description}</div>
+    `;
+    forecastGrid.appendChild(card);
+  });
+
+  document.getElementById('forecastSection').classList.remove('hidden');
+}
+
+// ENTER-TANGENT FÖR SÖK
+document.addEventListener('DOMContentLoaded', function() {
+  document.getElementById('cityInput').addEventListener('keypress', function(event) {
+    if (event.key === 'Enter') {
+      searchWeather();
+    }
+  });
+
+  // Ladda standardstad vid start
+  getWeatherByCity('Stockholm');
+});
+</script>
+
+</body>
+</html>
