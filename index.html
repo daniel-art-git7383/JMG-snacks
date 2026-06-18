@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>JMGY Snack Store</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap" rel="stylesheet">
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Poppins', Arial;
+  background: linear-gradient(135deg, #89f7fe, #66a6ff);
+  text-align: center;
+  color: #222;
+  min-height: 100vh;
+}
+
+header {
+  background: rgba(255, 255, 255, 0.95);
+  padding: 15px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.logo {
+  font-size: 24px;
+  font-weight: 600;
+  color: #3a86ff;
+}
+
+.nav-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.cart-btn {
+  position: relative;
+  background: #ff6b6b;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-family: Poppins;
+  font-weight: 600;
+  transition: 0.3s;
+}
+
+.cart-btn:hover {
+  background: #ff5252;
+}
+
+.cart-count {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: #ff6b6b;
+  color: white;
+  border-radius: 50%;
+  width: 25px;
+  height: 25px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 12px;
+}
+
+/* SIDOR */
+.page {
+  display: none;
+  padding: 20px;
+  animation: fadeIn 0.3s;
+}
+
+.page.active {
+  display: block;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* KORT */
+.card {
+  width: 100%;
+  max-width: 320px;
+  margin: 15px auto;
+  background: white;
+  border-radius: 18px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+  padding: 20px;
+  transition: 0.3s;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+}
+
+/* INPUT */
+input {
+  width: 90%;
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  font-family: Poppins;
+  font-size: 14px;
+  margin: 8px 0;
+}
+
+input:focus {
+  outline: none;
+  border-color: #3a86ff;
+  box-shadow: 0 0 5px rgba(58, 134, 255, 0.3);
+}
+
+/* KNAPPAR */
+button {
+  padding: 12px 20px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-family: Poppins;
+  font-weight: 600;
+  margin: 8px 5px;
+  background: #3a86ff;
+  color: white;
+  transition: 0.3s;
+}
+
+button:hover {
+  background: #265df2;
+  transform: scale(1.05);
+}
+
+.back-btn {
+  background: #6c5ce7;
+}
+
+.back-btn:hover {
+  background: #5f3dc4;
+}
+
+.delete-btn {
+  background: #ff6b6b;
+  padding: 8px 12px;
+  font-size: 12px;
+}
+
+.delete-btn:hover {
+  background: #ff5252;
+}
+
+/* KATEGORIER */
+.categories {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin: 20px 0;
+}
+
+.categories button {
+  min-width: 120px;
+}
+
+/* PRODUKTER */
+.products-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+  max-width: 1000px;
+  margin: 20px auto;
+}
+
+.product-card {
+  background: white;
+  border-radius: 15px;
+  padding: 20px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  transition: 0.3s;
+}
+
+.product-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+}
+
+.product-emoji {
+  font-size: 50px;
+  margin: 10px 0;
+}
+
+.product-name {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 10px 0;
+}
+
+.product-price {
+  font-size: 24px;
+  color: #ff6b6b;
+  font-weight: 600;
+  margin: 10px 0;
+}
+
+.quantity-input {
+  width: 60px;
+  padding: 8px;
+  text-align: center;
+  margin: 10px auto;
+  font-size: 14px;
+}
+
+/* VARUKORG */
+.cart-items {
+  max-width: 600px;
+  margin: 20px auto;
+}
+
+.cart-item {
+  background: white;
+  border-radius: 12px;
+  padding: 15px;
+  margin: 10px 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.cart-item-info {
+  text-align: left;
+  flex: 1;
+}
+
+.cart-item-name {
+  font-weight: 600;
+  font-size: 16px;
+}
+
+.cart-item-price {
+  color: #ff6b6b;
+  font-weight: 600;
+}
+
+.cart-total {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  margin: 20px auto;
+  max-width: 600px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+.total-amount {
+  font-size: 32px;
+  color: #3a86ff;
+  font-weight: 600;
+  margin: 15px 0;
+}
+
+.empty-cart {
+  font-size: 18px;
+  color: #999;
+  margin: 40px 0;
+}
+
+/* RESPONSIV */
+@media (max-width: 768px) {
+  header {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .products-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .categories {
+    flex-direction: column;
+  }
+
+  .categories button {
+    width: 100%;
+  }
+}
+
+h1 {
+  margin: 20px 0;
+  color: #222;
+}
+
+h3 {
+  color: #3a86ff;
+  margin: 15px 0;
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="logo">🍪 JMGY Snack Store</div>
+  <div class="nav-buttons">
+    <button class="cart-btn" onclick="switchPage('cart')">
+      🛒 Varukorg
+      <span class="cart-count" id="cartCount" style="display:none;">0</span>
+    </button>
+    <button onclick="logout()">Logga ut</button>
+  </div>
+</header>
+
+<!-- LOGIN -->
+<div id="login" class="page active">
+  <h1>🍪 JMGY Snack Store</h1>
+  <div class="card">
+    <h3>🔐 Logga in</h3>
+    <input id="user" placeholder="Namn eller e-post" type="text">
+    <br>
+    <button onclick="login()">Starta</button>
+  </div>
+</div>
+
+<!-- SHOP -->
+<div id="shop" class="page">
+  <h1>🍭 Välj kategori</h1>
+  <div class="categories">
+    <button onclick="show('cookies')">🍪 Kakor</button>
+    <button onclick="show('drinks')">🥤 Drycker</button>
+    <button onclick="show('bars')">🍫 Bars</button>
+  </div>
+  <div class="products-grid" id="products"></div>
+</div>
+
+<!-- VARUKORG -->
+<div id="cart" class="page">
+  <h1>🛒 Din varukorg</h1>
+  <div id="cartContent"></div>
+  <div class="cart-total">
+    <div class="total-amount">Totalt: <span id="totalPrice">0</span> kr</div>
+    <button onclick="switchPage('shop')">🔙 Fortsätt handla</button>
+    <button onclick="checkout()" style="background: #51cf66;">✅ Gå till kassa</button>
+  </div>
+</div>
+
+<!-- ORDBEKREFTELSE -->
+<div id="confirmation" class="page">
+  <div class="card">
+    <h1>✅ Tack för din beställning!</h1>
+    <div style="font-size: 48px; margin: 20px 0;">🎉</div>
+    <p style="font-size: 18px; margin: 20px 0;" id="orderMessage"></p>
+    <button onclick="newOrder()">🛍️ Nya varor</button>
+  </div>
+</div>
+
+<script>
+let cart = [];
+let currentUser = "";
+
+// LADDA VARUKORG FRÅN WEBBLÄSARE
+window.onload = function() {
+  let saved = localStorage.getItem('cart');
+  if(saved) {
+    cart = JSON.parse(saved);
+    updateCartCount();
+  }
+};
+
+// SPARA VARUKORG
+function saveCart() {
+  localStorage.setItem('cart', JSON.stringify(cart));
+  updateCartCount();
+}
+
+// UPPDATERA VARUKORGSKRÄARE
+function updateCartCount() {
+  let count = cart.length;
+  let element = document.getElementById('cartCount');
+  if(count > 0) {
+    element.style.display = 'flex';
+    element.textContent = count;
+  } else {
+    element.style.display = 'none';
+  }
+}
+
+// LOGGA IN
+function login() {
+  let user = document.getElementById("user").value;
+  if(user.trim() === "") {
+    alert("Skriv något!");
+    return;
+  }
+  currentUser = user;
+  localStorage.setItem('user', user);
+  switchPage("shop");
+  show('cookies');
+}
+
+// LOGGA UT
+function logout() {
+  currentUser = "";
+  cart = [];
+  localStorage.clear();
+  switchPage("login");
+  document.getElementById("user").value = "";
+}
+
+// BYTA SIDA
+function switchPage(page) {
+  document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
+  document.getElementById(page).classList.add("active");
+  if(page === 'cart') {
+    updateCart();
+  }
+}
+
+// VISA PRODUKTER
+function show(type) {
+  let products = {
+    cookies: [
+      {name: "Chokladkaka", emoji: "🍪", price: 25},
+      {name: "Havrekaka", emoji: "🍪", price: 20},
+      {name: "Blåbärskaka", emoji: "🍪", price: 22},
+      {name: "Kokoskaka", emoji: "🍪", price: 23}
+    ],
+    drinks: [
+      {name: "Cola", emoji: "🥤", price: 20},
+      {name: "Fanta", emoji: "🥤", price: 20},
+      {name: "Sprite", emoji: "🥤", price: 20},
+      {name: "Appelsinjuice", emoji: "🧃", price: 18}
+    ],
+    bars: [
+      {name: "Snickers", emoji: "🍫", price: 15},
+      {name: "Twix", emoji: "🍫", price: 15},
+      {name: "Milka", emoji: "🍫", price: 14},
+      {name: "Mars", emoji: "🍫", price: 15}
+    ]
+  };
+
+  let html = "";
+  if(products[type]) {
+    products[type].forEach((product, index) => {
+      html += `
+        <div class="product-card">
+          <div class="product-emoji">${product.emoji}</div>
+          <div class="product-name">${product.name}</div>
+          <div class="product-price">${product.price} kr</div>
+          <input type="number" id="qty_${index}" class="quantity-input" value="1" min="1" max="99">
+          <button onclick="addToCart('${product.name}', ${product.price}, 'qty_${index}')">Lägg till</button>
+        </div>
+      `;
+    });
+  }
+
+  document.getElementById("products").innerHTML = html;
+}
+
+// LÄGG TILL I VARUKORG
+function addToCart(name, price, qtyId) {
+  let qty = parseInt(document.getElementById(qtyId).value) || 1;
+  
+  for(let i = 0; i < qty; i++) {
+    cart.push({name: name, price: price});
+  }
+  
+  saveCart();
+  alert(`✅ ${qty}x ${name} lagd till i varukorg!`);
+}
+
+// UPPDATERA VARUKORG
+function updateCart() {
+  let html = "";
+  
+  if(cart.length === 0) {
+    html = '<div class="empty-cart">Din varukorg är tom</div>';
+  } else {
+    html = '<div class="cart-items">';
+    cart.forEach((item, index) => {
+      html += `
+        <div class="cart-item">
+          <div class="cart-item-info">
+            <div class="cart-item-name">${item.name}</div>
+            <div class="cart-item-price">${item.price} kr</div>
+          </div>
+          <button class="delete-btn" onclick="removeFromCart(${index})">❌</button>
+        </div>
+      `;
+    });
+    html += '</div>';
+  }
+  
+  document.getElementById("cartContent").innerHTML = html;
+  
+  let total = cart.reduce((sum, item) => sum + item.price, 0);
+  document.getElementById("totalPrice").textContent = total;
+}
+
+// TA BORT FRÅN VARUKORG
+function removeFromCart(index) {
+  cart.splice(index, 1);
+  saveCart();
+  updateCart();
+}
+
+// KASSA
+function checkout() {
+  if(cart.length === 0) {
+    alert("Din varukorg är tom!");
+    return;
+  }
+  
+  let total = cart.reduce((sum, item) => sum + item.price, 0);
+  let itemCount = cart.length;
+  
+  document.getElementById("orderMessage").innerHTML = `
+    <strong>${currentUser}</strong><br><br>
+    Du beställde <strong>${itemCount} st</strong> varor<br>
+    Totalt: <strong>${total} kr</strong><br><br>
+    Din beställning kommer snart! 🚚
+  `;
+  
+  cart = [];
+  saveCart();
+  switchPage("confirmation");
+}
+
+// NY BESTÄLLNING
+function newOrder() {
+  switchPage("shop");
+  show('cookies');
+}
+</script>
+
+</body>
+</html>
